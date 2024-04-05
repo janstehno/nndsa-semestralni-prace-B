@@ -46,7 +46,7 @@ public class TreapPanel<K extends Comparable<K>, P extends Comparable<P>> {
         root.getChildren().add(allButton());
         root.getChildren().add(nextButton());
         if (state != null) root.getChildren().add(stepText());
-        if (state != null) root.getChildren().add(heightText());
+        if (state != null) root.getChildren().add(infoText());
         if (treap.height() != -1) initializeTextField();
     }
 
@@ -121,7 +121,7 @@ public class TreapPanel<K extends Comparable<K>, P extends Comparable<P>> {
     }
 
     private Button allButton() {
-        Button allButton = new Button("All");
+        Button allButton = new Button("Everything");
         allButton.setMinHeight(30);
         allButton.setMaxHeight(30);
         allButton.setMinWidth(100);
@@ -159,11 +159,11 @@ public class TreapPanel<K extends Comparable<K>, P extends Comparable<P>> {
         return stepText;
     }
 
-    private Text heightText() {
-        String string = "Height: " + state.treap().height();
-        Text heightText = new Text(string);
-        heightText.setTranslateY(135);
-        return heightText;
+    private Text infoText() {
+        String string = "Height: " + state.treap().height() + ", Nodes: " + state.treap().numberOfNodes();
+        Text infoText = new Text(string);
+        infoText.setTranslateY(135);
+        return infoText;
     }
 
     private void initializeTextField() {
