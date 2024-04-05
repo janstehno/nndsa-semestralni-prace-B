@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Random;
 
 public class TownGenerator<K extends Comparable<K>, P extends Comparable<P>> {
+    private final Random random = new Random();
 
     private final String[] towns15 = {"Adamov",
                                       "Brno",
@@ -26,19 +27,23 @@ public class TownGenerator<K extends Comparable<K>, P extends Comparable<P>> {
                                       "Vysoké_Mýto"
     };
 
+    private int randomPriority() {
+        return random.nextInt(100);
+    }
+
+    public Node<K, P> generateNode(K key, Class<K> keyClass, Class<P> priorityClass) {
+        return new Node<>(keyClass.cast(key), priorityClass.cast(randomPriority()));
+    }
+
     public List<Node<K, P>> generateNodes(Class<K> keyClass, Class<P> priorityClass) {
         return generateTowns(keyClass, priorityClass);
     }
 
     private List<Node<K, P>> generateTowns(Class<K> keyClass, Class<P> priorityClass) {
         List<Node<K, P>> nodes = new ArrayList<>();
-        Random random = new Random();
-
         for (String townName : towns15) {
-            int priority = random.nextInt(100);
-            nodes.add(new Node<>(keyClass.cast(townName), priorityClass.cast(priority)));
+            nodes.add(new Node<>(keyClass.cast(townName), priorityClass.cast(randomPriority())));
         }
-
         Collections.shuffle(nodes);
         return nodes;
     }

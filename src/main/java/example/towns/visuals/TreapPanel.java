@@ -87,6 +87,11 @@ public class TreapPanel<K extends Comparable<K>, P extends Comparable<P>> {
         initializeUI();
     }
 
+    private void insertNode(K key) {
+        treap.insertNode(generator.generateNode(key, keyClass, priorityClass), this);
+        initializeUI();
+    }
+
     private void removeNode(K key) {
         treap.removeNode(key, this);
         initializeUI();
@@ -170,8 +175,29 @@ public class TreapPanel<K extends Comparable<K>, P extends Comparable<P>> {
         removeText.setMaxWidth(100);
         removeText.setTranslateY(210);
         root.getChildren().add(removeText);
+        root.getChildren().add(addButton());
         root.getChildren().add(removeButton());
         root.getChildren().add(findButton());
+    }
+
+    private Button addButton() {
+        Button addButton = new Button("Add");
+        addButton.setMinHeight(30);
+        addButton.setMaxHeight(30);
+        addButton.setMinWidth(100);
+        addButton.setMaxWidth(100);
+        addButton.setTranslateY(245);
+        addButton.setOnAction(event -> {
+            root.getChildren().clear();
+            this.renderQueue.clear();
+            this.state = null;
+            String keyInput = removeText.getText();
+            if (!keyInput.isEmpty()) {
+                insertNode((K) keyInput);
+            }
+            draw();
+        });
+        return addButton;
     }
 
     private Button removeButton() {
@@ -180,7 +206,7 @@ public class TreapPanel<K extends Comparable<K>, P extends Comparable<P>> {
         removeButton.setMaxHeight(30);
         removeButton.setMinWidth(100);
         removeButton.setMaxWidth(100);
-        removeButton.setTranslateY(245);
+        removeButton.setTranslateY(280);
         removeButton.setOnAction(event -> {
             root.getChildren().clear();
             this.renderQueue.clear();
@@ -195,13 +221,13 @@ public class TreapPanel<K extends Comparable<K>, P extends Comparable<P>> {
     }
 
     private Button findButton() {
-        Button removeButton = new Button("Find");
-        removeButton.setMinHeight(30);
-        removeButton.setMaxHeight(30);
-        removeButton.setMinWidth(100);
-        removeButton.setMaxWidth(100);
-        removeButton.setTranslateY(280);
-        removeButton.setOnAction(event -> {
+        Button findButton = new Button("Find");
+        findButton.setMinHeight(30);
+        findButton.setMaxHeight(30);
+        findButton.setMinWidth(100);
+        findButton.setMaxWidth(100);
+        findButton.setTranslateY(315);
+        findButton.setOnAction(event -> {
             root.getChildren().clear();
             this.renderQueue.clear();
             this.state = null;
@@ -211,6 +237,6 @@ public class TreapPanel<K extends Comparable<K>, P extends Comparable<P>> {
             }
             draw();
         });
-        return removeButton;
+        return findButton;
     }
 }
