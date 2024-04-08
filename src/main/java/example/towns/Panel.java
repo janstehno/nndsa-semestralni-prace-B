@@ -1,16 +1,21 @@
-package example.towns.visuals;
+package example.towns;
 
-import example.towns.Towns;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
+import model.Treap;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Panel extends Application {
     @Override
     public void start(Stage stage) {
-        Towns treap = new Towns();
-        TreapPanel<String, Integer> treapPanel = new TreapPanel<>(treap, String.class, Integer.class);
+        Treap<String, Integer> treap = new Treap<>();
+        List<String> towns = new ArrayList<>(Arrays.asList("Brno", "Praha", "Děčín", "Hradec_Králové", "Liberec", "Olomouc"));
+        TreapPanel<String, Integer> treapPanel = new TreapPanel<>(treap, towns);
 
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(treapPanel.getRoot());

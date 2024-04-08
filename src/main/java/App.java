@@ -1,4 +1,4 @@
-import example.towns.visuals.Panel;
+import example.towns.Panel;
 import javafx.application.Application;
 
 public class App {

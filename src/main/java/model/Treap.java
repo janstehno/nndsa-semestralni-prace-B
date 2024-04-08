@@ -1,38 +1,42 @@
 package model;
 
-import example.towns.visuals.TreapPanel;
+import example.towns.TreapPanel;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
-public abstract class Treap<K extends Comparable<K>, P extends Comparable<P>> implements Serializable {
-    private Node<K, P> root;
+public class Treap<K extends Comparable<K>, P extends Comparable<P>> implements Serializable {
+    private Node root;
 
     public Treap() {
         this.root = null;
     }
 
-    public Node<K, P> getRoot() {
+    public Node getRoot() {
         return root;
     }
 
-    public void insertNode(Node<K, P> element, TreapPanel<K, P> panel) {
+    public void insertNode(Node element, TreapPanel<K, P> panel) {
         // render
-        panel.enqueue(this, element);
+        if (panel != null) panel.enqueue(this, element);
 
         root = insert(root, element, panel);
     }
 
-    public Node<K, P> insert(Node<K, P> root, Node<K, P> element, TreapPanel<K, P> panel) {
+    private Node insert(Node root, Node element, TreapPanel<K, P> panel) {
         if (root == null) return element;
 
         // render
-        panel.enqueue(this, root);
+        if (panel != null) panel.enqueue(this, root);
 
         if (element.getKey().compareTo(root.getKey()) < 0) {
             root.setLeft(insert(root.getLeft(), element, panel));
 
             // render
-            panel.enqueue(this, element);
+            if (panel != null) panel.enqueue(this, element);
 
             if (root.getLeft().getPriority().compareTo(root.getPriority()) < 0) {
                 root = rotateRight(root);
@@ -41,7 +45,7 @@ public abstract class Treap<K extends Comparable<K>, P extends Comparable<P>> im
             root.setRight(insert(root.getRight(), element, panel));
 
             // render
-            panel.enqueue(this, element);
+            if (panel != null) panel.enqueue(this, element);
 
             if (root.getRight().getPriority().compareTo(root.getPriority()) < 0) {
                 root = rotateLeft(root);
@@ -49,14 +53,14 @@ public abstract class Treap<K extends Comparable<K>, P extends Comparable<P>> im
         }
 
         // render
-        panel.enqueue(this, root);
+        if (panel != null) panel.enqueue(this, root);
 
         return root;
     }
 
-    private Node<K, P> rotateRight(Node<K, P> root) {
-        Node<K, P> left = root.getLeft();
-        Node<K, P> right = left.getRight();
+    private Node rotateRight(Node root) {
+        Node left = root.getLeft();
+        Node right = left.getRight();
 
         left.setRight(root);
         root.setLeft(right);
@@ -64,9 +68,9 @@ public abstract class Treap<K extends Comparable<K>, P extends Comparable<P>> im
         return left;
     }
 
-    private Node<K, P> rotateLeft(Node<K, P> root) {
-        Node<K, P> right = root.getRight();
-        Node<K, P> left = right.getLeft();
+    private Node rotateLeft(Node root) {
+        Node right = root.getRight();
+        Node left = right.getLeft();
 
         right.setLeft(root);
         root.setRight(left);
@@ -81,7 +85,7 @@ public abstract class Treap<K extends Comparable<K>, P extends Comparable<P>> im
         panel.enqueue(this, root);
     }
 
-    private Node<K, P> remove(Node<K, P> root, K key, TreapPanel<K, P> panel) {
+    private Node remove(Node root, K key, TreapPanel<K, P> panel) {
         if (root == null) return null;
 
         // render
@@ -132,11 +136,11 @@ public abstract class Treap<K extends Comparable<K>, P extends Comparable<P>> im
         return root;
     }
 
-    public Node<K, P> findNode(K key, TreapPanel<K, P> panel) {
+    public Node findNode(K key, TreapPanel<K, P> panel) {
         return find(root, key, panel);
     }
 
-    private Node<K, P> find(Node<K, P> root, K key, TreapPanel<K, P> panel) {
+    private Node find(Node root, K key, TreapPanel<K, P> panel) {
         // render
         panel.enqueue(this, root);
 
@@ -154,7 +158,7 @@ public abstract class Treap<K extends Comparable<K>, P extends Comparable<P>> im
         return countNodes(root);
     }
 
-    private int countNodes(Node<K, P> root) {
+    private int countNodes(Node root) {
         if (root == null) return 0;
         return 1 + countNodes(root.getLeft()) + countNodes(root.getRight());
     }
@@ -163,7 +167,7 @@ public abstract class Treap<K extends Comparable<K>, P extends Comparable<P>> im
         return heightOf(root);
     }
 
-    private int heightOf(Node<K, P> node) {
+    private int heightOf(Node node) {
         if (node == null) {
             return -1;
         } else {
@@ -176,5 +180,61 @@ public abstract class Treap<K extends Comparable<K>, P extends Comparable<P>> im
 
     public void clear() {
         root = null;
+    }
+
+    private Integer randomPriority(Random random) {
+        return random.nextInt(100);
+    }
+
+    public Node generateNode(K key) {
+        final Random random = new Random();
+        return new Node(key, (P) randomPriority(random));
+    }
+
+    public List<Node> generateNodes(List<K> keys) {
+        final Random random = new Random();
+        List<Node> nodes = new ArrayList<>();
+        for (K key : keys) {
+            nodes.add(new Node(key, (P) randomPriority(random)));
+        }
+        Collections.shuffle(nodes);
+        return nodes;
+    }
+
+    public class Node implements Serializable {
+        private final K key;
+        private final P priority;
+        private Node left, right;
+
+        public Node(K key, P priority) {
+            this.key = key;
+            this.priority = priority;
+            this.left = null;
+            this.right = null;
+        }
+
+        public K getKey() {
+            return key;
+        }
+
+        public P getPriority() {
+            return priority;
+        }
+
+        public Node getLeft() {
+            return left;
+        }
+
+        public Node getRight() {
+            return right;
+        }
+
+        public void setLeft(Node left) {
+            this.left = left;
+        }
+
+        public void setRight(Node right) {
+            this.right = right;
+        }
     }
 }

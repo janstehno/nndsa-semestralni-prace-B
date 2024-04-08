@@ -1,4 +1,4 @@
-package example.towns.visuals;
+package example.towns;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -6,15 +6,15 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import model.Node;
 import model.State;
+import model.Treap;
 
 public class TreapRenderer<K extends Comparable<K>, P extends Comparable<P>> {
     public void draw(State<K, P> state, TreapPanel<K, P> panel) {
         drawTreap(panel.getRoot(), state.treap().getRoot(), state.node(), (double) panel.getWidth() / 2, 50, 250);
     }
 
-    private void drawTreap(Pane pane, Node<K, P> root, Node<K, P> current, double x, double y, double dx) {
+    private void drawTreap(Pane pane, Treap<K, P>.Node root, Treap<K, P>.Node current, double x, double y, double dx) {
         if (root != null) {
 
             boolean isCurrentNode = current != null && root.getKey().equals(current.getKey()) && root.getPriority().equals(current.getPriority());

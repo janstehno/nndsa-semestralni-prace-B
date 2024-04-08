@@ -2,11 +2,11 @@ package model;
 
 import java.io.*;
 
-public record State<K extends Comparable<K>, P extends Comparable<P>>(Treap<K, P> treap, Node<K, P> node) {
+public record State<K extends Comparable<K>, P extends Comparable<P>>(Treap<K, P> treap, Treap<K, P>.Node node) {
 
-    public State(Treap<K, P> treap, Node<K, P> node) {
+    public State(Treap<K, P> treap, Treap<K, P>.Node node) {
         this.treap = (Treap<K, P>) deepCopy(treap);
-        this.node = (Node<K, P>) deepCopy(node);
+        this.node = (Treap<K, P>.Node) deepCopy(node);
     }
 
     private Object deepCopy(Object original) {
