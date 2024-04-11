@@ -9,12 +9,12 @@ import javafx.scene.text.Text;
 import model.State;
 import model.Treap;
 
-public class TreapRenderer<K extends Comparable<K>, P extends Comparable<P>> {
-    public void draw(State<K, P> state, TreapPanel<K, P> panel) {
+public class TreapRenderer<K extends Comparable<K>, P extends Comparable<P>, V> {
+    public void draw(State<K, P, V> state, TreapPanel<K, P, V> panel) {
         drawTreap(panel.getRoot(), state.treap().getRoot(), state.node(), (double) panel.getWidth() / 2, 50, 250);
     }
 
-    private void drawTreap(Pane pane, Treap<K, P>.Node root, Treap<K, P>.Node current, double x, double y, double dx) {
+    private void drawTreap(Pane pane, Treap<K, P, V>.Node root, Treap<K, P, V>.Node current, double x, double y, double dx) {
         if (root != null) {
 
             boolean isCurrentNode = current != null && root.getKey().equals(current.getKey()) && root.getPriority().equals(current.getPriority());

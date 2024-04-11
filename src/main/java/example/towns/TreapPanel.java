@@ -9,28 +9,28 @@ import model.Treap;
 
 import java.util.*;
 
-public class TreapPanel<K extends Comparable<K>, P extends Comparable<P>> {
+public class TreapPanel<K extends Comparable<K>, P extends Comparable<P>, V> {
 
     public Pane root = new Pane();
     public final int width = 1240;
     public int height = 600;
 
-    private final TreapRenderer<K, P> renderer;
-    private final LinkedList<State<K, P>> renderQueue = new LinkedList<>();
+    private final TreapRenderer<K, P, V> renderer;
+    private final LinkedList<State<K, P, V>> renderQueue = new LinkedList<>();
 
-    private final Treap<K, P> treap;
-    private List<Treap<K, P>.Node> nodes;
-    private final List<K> keys;
+    private final Treap<K, P, V> treap;
+    private List<Treap<K, P, V>.Node> nodes;
+    private final Map<K, V> elements;
 
-    private State<K, P> state;
+    private State<K, P, V> state;
 
     private TextField removeText;
 
-    public TreapPanel(Treap<K, P> treap, List<K> keys) {
+    public TreapPanel(Treap<K, P, V> treap, Map<K, V> elements) {
         this.treap = treap;
         this.renderer = new TreapRenderer<>();
-        this.keys = keys;
-        this.nodes = treap.generateNodes(keys);
+        this.elements = elements;
+        this.nodes = treap.generateNodes(elements);
         initializeUI();
     }
 
@@ -55,12 +55,12 @@ public class TreapPanel<K extends Comparable<K>, P extends Comparable<P>> {
         return height;
     }
 
-    public void enqueue(Treap<K, P> treap, Treap<K, P>.Node node) {
-        State<K, P> copy = new State<>(treap, node);
+    public void enqueue(Treap<K, P, V> treap, Treap<K, P, V>.Node node) {
+        State<K, P, V> copy = new State<>(treap, node);
         renderQueue.add(copy);
     }
 
-    public State<K, P> dequeue() {
+    public State<K, P, V> dequeue() {
         return renderQueue.poll();
     }
 
@@ -74,14 +74,14 @@ public class TreapPanel<K extends Comparable<K>, P extends Comparable<P>> {
     }
 
     private void insertNodes() {
-        for (Treap<K, P>.Node node : nodes) {
+        for (Treap<K, P, V>.Node node : nodes) {
             treap.insertNode(node, this);
         }
         initializeUI();
     }
 
-    private void insertNode(K key) {
-        treap.insertNode(treap.generateNode(key), this);
+    private void insertNode(K key, V value) {
+        treap.insertNode(treap.generateNode(key, value), this);
         initializeUI();
     }
 
@@ -91,7 +91,7 @@ public class TreapPanel<K extends Comparable<K>, P extends Comparable<P>> {
     }
 
     private void findNode(K key) {
-        Treap<K, P>.Node found = treap.findNode(key, this);
+        Treap<K, P, V>.Node found = treap.findNode(key, this);
         initializeUI();
     }
 
@@ -103,7 +103,7 @@ public class TreapPanel<K extends Comparable<K>, P extends Comparable<P>> {
         generateButton.setMaxWidth(100);
         generateButton.setOnAction(event -> {
             root.getChildren().clear();
-            this.nodes = treap.generateNodes(keys);
+            this.nodes = treap.generateNodes(elements);
             this.renderQueue.clear();
             this.treap.clear();
             this.state = null;
@@ -186,7 +186,7 @@ public class TreapPanel<K extends Comparable<K>, P extends Comparable<P>> {
             this.state = null;
             String keyInput = removeText.getText();
             if (!keyInput.isEmpty()) {
-                insertNode((K) keyInput);
+                insertNode((K) keyInput, null);
             }
             draw();
         });

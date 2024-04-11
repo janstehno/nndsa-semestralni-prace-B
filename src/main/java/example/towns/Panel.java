@@ -6,16 +6,15 @@ import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
 import model.Treap;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class Panel extends Application {
     @Override
     public void start(Stage stage) {
-        Treap<String, Integer> treap = new Treap<>();
-        List<String> towns = new ArrayList<>(Arrays.asList("Brno", "Praha", "Děčín", "Hradec_Králové", "Liberec", "Olomouc"));
-        TreapPanel<String, Integer> treapPanel = new TreapPanel<>(treap, towns);
+        Map<String, String> towns = new HashMap<>(Map.of("Brno", "", "Praha", "", "Děčín", "", "Hradec_Králové", "", "Liberec", "", "Olomouc", ""));
+
+        Treap<String, Integer, String> treap = new Treap<>(Integer.class, 100);
+        TreapPanel<String, Integer, String> treapPanel = new TreapPanel<>(treap, towns);
 
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(treapPanel.getRoot());
