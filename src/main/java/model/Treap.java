@@ -13,7 +13,7 @@ public class Treap<K extends Comparable<K>, P extends Comparable<P>, V> implemen
     private Node root;
     private final PriorityGenerator<P> generator;
 
-    public Treap(Class<P> priorityClass, P priorityBound) {
+    public Treap(Class<P> priorityClass, Integer priorityBound) {
         this.root = null;
         generator = new PriorityGenerator<>(priorityClass, priorityBound);
     }

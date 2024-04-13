@@ -7,19 +7,31 @@ public class PriorityGenerator<T> implements Serializable {
 
     private final Random random = new Random();
     private final Class<T> c;
-    private final T bound;
+    private Integer bound;
 
-    public PriorityGenerator(Class<T> c, T bound) {
+    public PriorityGenerator(Class<T> c, Integer bound) {
         this.c = c;
         this.bound = bound;
     }
 
     private Integer randomInteger() {
-        return random.nextInt((Integer) bound);
+        if (bound != null) return random.nextInt(bound);
+        return random.nextInt();
     }
 
     private Double randomDouble() {
-        return random.nextDouble((Double) bound);
+        if (bound != null) return random.nextDouble(bound);
+        return random.nextDouble();
+    }
+
+    private String randomString() {
+        if(bound == null) bound = 5;
+        StringBuilder stringBuilder = new StringBuilder(bound);
+        for (int i = 0; i < bound; i++) {
+            int asciiValue = random.nextInt(128);
+            stringBuilder.append((char) asciiValue);
+        }
+        return stringBuilder.toString();
     }
 
     public T randomPriority() {
@@ -27,6 +39,8 @@ public class PriorityGenerator<T> implements Serializable {
             return (T) randomInteger();
         } else if (c.equals(Double.class)) {
             return (T) randomDouble();
+        } else if (c.equals(String.class)) {
+            return (T) randomString();
         } else {
             throw new IllegalArgumentException("Unsupported type for priority generation: " + c);
         }
